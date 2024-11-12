@@ -36,14 +36,17 @@ const fetchContentcontroller = async (req, res) => {
             ? response.CommonPrefixes.filter(
                 (prefix) => prefix.Prefix !== key
             ).map((prefix) => ({
-                name: prefix.Prefix.replace(currentPath, '')
+                name: prefix.Prefix.replace(currentPath, ''),
+                isFolder: true,
               }))
             : [];
         console.log('folders:', folders);
         const files = response.Contents
             ? response.Contents.filter((item) => item.Key !== currentPath).map((file) => ({
-                name: file.Key.replace(currentPath, '')
+                name: file.Key.replace(currentPath, ''),
+                isFolder: false,
               }))
+
             : [];
         console.log('files:', files);
               const content ={
