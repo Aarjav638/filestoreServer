@@ -22,15 +22,20 @@ const fetchContentcontroller = async (req, res) => {
 
         const params = {
             Bucket: bucketName,
-            Key: key,
             Delimiter: '/',
+            Prefix: currentPath,
+            key: key,
         };
 
         const command = new ListObjectsV2Command(params);
         const response = await client.send(command);
 
+        console.log('response:', response);
+
         const folders = response.CommonPrefixes
-            ? response.CommonPrefixes.map((prefix) => ({
+            ? response.CommonPrefixes.filter(
+                (prefix) => prefix.Prefix !== key
+            ).map((prefix) => ({
                 name: prefix.Prefix.replace(currentPath, '')
               }))
             : [];
