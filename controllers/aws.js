@@ -41,8 +41,8 @@ const fetchContentcontroller = async (req, res) => {
               }))
             : [];
               const content ={
-                files:files,
-                folders:folders
+                files:files||[],
+                folders:folders||[]
               }
         console.log('Sending data to client:', content);
         // res.status(200).send(content); 
