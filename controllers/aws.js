@@ -46,10 +46,12 @@ const fetchContentcontroller = async (req, res) => {
                 folders:folders
               }
         console.log('Sending data to client:', content);
-        res.status(200).send(content); // Send JSON response
+        // res.status(200).send(content); 
+        res.send(content);
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).send({ error: error.message }); // Send proper error message
+        res.send(error.message);
+        res.status(500).send({ error: error.message }); 
     }
 };
 
