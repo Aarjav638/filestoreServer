@@ -7,7 +7,7 @@ const fetchContentcontroller = async (req, res) => {
         const { accessKeyId, secretAccessKey, region, bucketName, currentPath } = data;
         console.log('currentPath', currentPath);
 
-        if (!accessKeyId || !secretAccessKey || !region || !bucketName || !currentPath) {
+        if (!accessKeyId || !secretAccessKey || !region || !bucketName ) {
             return res.status(400).send({ error: 'Invalid input' });
         }
 
@@ -57,9 +57,8 @@ const createFolder=async(req,res)=>{
   try{
     const data = req.body;
     const { accessKeyId, secretAccessKey, region, bucketName, currentPath,folderName } = data;
-    console.log('currentPath', currentPath);
 
-    if (!accessKeyId || !secretAccessKey || !region || !bucketName || !currentPath||!folderName) {
+    if (!accessKeyId || !secretAccessKey || !region || !bucketName ||!folderName) {
         return res.status(400).send({ error: 'Invalid input' });
     }
 
@@ -87,9 +86,46 @@ const createFolder=async(req,res)=>{
     res.status(500).send({error:'Internal server error'});
   }
 
+
 }
+
+// const uploadFiles=async(req,res)=>{
+//   try {
+//     const files = req.files;
+
+//     if (!files || files.length === 0) {
+//       return res.status(400).send({ error: 'No files uploaded' });
+//     }
+
+//     const uploadResults = await Promise.all(
+//       files.map(async (file) => {
+//         const params = {
+//           Bucket: BUCKET_NAME,
+//           Key: `uploads/${Date.now()}_${file.originalname}`, // Unique file name
+//           Body: file.buffer,
+//           ContentType: file.mimetype,
+//         };
+
+//         const command = new PutObjectCommand(params);
+//         await s3Client.send(command);
+
+//         return {
+//           fileName: file.originalname,
+//           message: 'Uploaded successfully!',
+//         };
+//       })
+//     );
+
+//     res.status(200).send(uploadResults);
+//   } catch (error) {
+//     console.error('Error uploading files:', error);
+//     res.status(500).send({ error: 'Failed to upload files' });
+//   }
+
+// }
 
 module.exports = {
     fetchContentcontroller,
-    createFolder
+    createFolder,
+    // uploadFiles
 };
