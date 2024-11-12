@@ -1,7 +1,6 @@
 const { S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 
 const fetchContentcontroller = async (req, res) => {
-    try {
         console.log('fetchContentcontroller');
         const data = req.body;
 
@@ -48,11 +47,7 @@ const fetchContentcontroller = async (req, res) => {
         console.log('Sending data to client:', content);
         // res.status(200).send(content); 
         res.send(content);
-    } catch (error) {
-        console.error('Error:', error);
-        res.send(error.message);
-        res.status(500).send({ error: error.message }); 
-    }
+    
 };
 
 module.exports = fetchContentcontroller;
