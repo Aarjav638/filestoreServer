@@ -1,4 +1,4 @@
-const { S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
+const { S3Client, ListObjectsV2Command, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const fetchContentcontroller = async (req, res) => {
         console.log('fetchContentcontroller');
@@ -52,4 +52,44 @@ const fetchContentcontroller = async (req, res) => {
     
 };
 
-module.exports = fetchContentcontroller;
+
+const createFolder=async(req,res)=>{
+  try{
+    const data = req.body;
+    const { accessKeyId, secretAccessKey, region, bucketName, currentPath,folderName } = data;
+    console.log('currentPath', currentPath);
+
+    if (!accessKeyId || !secretAccessKey || !region || !bucketName || !currentPath||!folderName) {
+        return res.status(400).send({ error: 'Invalid input' });
+    }
+
+    const key = currentPath.endsWith('/') ? currentPath : `${currentPath}/`;
+    console.log('key', key);
+
+    const client = new S3Client({
+        region,
+        credentials: { accessKeyId, secretAccessKey },
+    });
+
+    const folderPath = `${currentPath}${folderName}/`;
+            const params = {
+                Bucket: bucketName,
+                Key: folderPath,
+                Body: '', 
+            };
+    const command = new PutObjectCommand(params);
+    await client.send(command);
+    res.status(200).send({message:'Folder created successfully'});
+
+  }
+  catch(err){
+    console.log('error',err);
+    res.status(500).send({error:'Internal server error'});
+  }
+
+}
+
+module.exports = {
+    fetchContentcontroller,
+    createFolder
+};
