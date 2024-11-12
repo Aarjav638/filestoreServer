@@ -32,12 +32,14 @@ const fetchContentcontroller = async (req, res) => {
         const folders = response.CommonPrefixes
             ? response.CommonPrefixes.map((prefix) => ({
                 name: prefix.Prefix.replace(currentPath, ''),
+                isFolder:true
               }))
             : [];
         
         const files = response.Contents
             ? response.Contents.filter((item) => item.Key !== currentPath).map((file) => ({
                 name: file.Key.replace(currentPath, ''),
+                isFolder:false
               }))
             : [];
               const content ={
