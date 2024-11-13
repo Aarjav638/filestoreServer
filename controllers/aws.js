@@ -115,8 +115,7 @@ const uploadFiles = async (req, res) => {
       !accessKeyId ||
       !secretAccessKey ||
       !region ||
-      !bucketName ||
-      !folderName
+      !bucketName
     ) {
       return res.status(400).send({ error: "Invalid input" });
     }
