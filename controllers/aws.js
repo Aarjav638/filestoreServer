@@ -115,7 +115,7 @@ const uploadFiles = async (req, res) => {
       !accessKeyId ||
       !secretAccessKey ||
       !region ||
-      !bucketName 
+      !bucketName
     ) {
       return res.status(400).send({ error: "Invalid input" });
     }
@@ -128,6 +128,7 @@ const uploadFiles = async (req, res) => {
       files.map(async (file) => {
         const params = {
           Bucket: bucketName,
+          Key: `${currentPath}${Date.now()}_${file.originalname}`,
           Key: `${currentPath}${Date.now()}_${file.originalname}`,
           Body: file.buffer,
           ContentType: file.mimetype,
@@ -154,6 +155,7 @@ const uploadFiles = async (req, res) => {
     }
 
     res.status(500).send({ error: "Failed to upload files" });
+  
   }
 };
 module.exports = {

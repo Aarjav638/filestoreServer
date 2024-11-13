@@ -131,7 +131,7 @@ const uploadFiles = async (req, res) => {
       files.map(async (file) => {
         const params = {
           Bucket: bucketName,
-          Key: `${currentPath}/${Date.now()}_${file.originalname}`,
+          Key: `${currentPath}${Date.now()}_${file.originalname}`,
           Body: file.buffer,
           ContentType: file.mimetype,
         };
