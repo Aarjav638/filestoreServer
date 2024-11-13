@@ -104,7 +104,7 @@ const createFolder = async (req, res) => {
   }
 };
 
-const uploadFiles = async (req, res, err) => {
+const uploadFiles = async (req, res) => {
   try {
     const files = req.files;
     const { accessKeyId, secretAccessKey, region, bucketName, currentPath } =
@@ -117,8 +117,7 @@ const uploadFiles = async (req, res, err) => {
       !accessKeyId ||
       !secretAccessKey ||
       !region ||
-      !bucketName ||
-      !folderName
+      !bucketName 
     ) {
       return res.status(400).send({ error: "Invalid input" });
     }
@@ -151,7 +150,6 @@ const uploadFiles = async (req, res, err) => {
   } catch (error) {
     console.error("Error uploading files:", error);
 
-    // Handle Multer-specific errors if not caught in middleware
     if (error.code === "LIMIT_UNEXPECTED_FILE") {
       return res
         .status(400)
