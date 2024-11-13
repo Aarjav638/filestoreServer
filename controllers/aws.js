@@ -145,8 +145,16 @@ const uploadFiles = async (req, res) => {
 
     res.status(200).send(uploadResults);
   } catch (error) {
-    console.error("Error uploading files:", error);
+     console.error("Error uploading files:", error);
+
+    if (error.code === "LIMIT_UNEXPECTED_FILE") {
+      return res
+        .status(400)
+        .send({ error: "Too many files uploaded. Maximum allowed is 10." });
+    }
+
     res.status(500).send({ error: "Failed to upload files" });
+  
   }
 };
 module.exports = {
