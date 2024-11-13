@@ -4,7 +4,7 @@ const {
   fetchContentcontroller,
   createFolder,
   uploadFiles,
-} = require("../controllers/aws");
+} = require("../controllers/wasabi");
 router.get("/", (req, res) => {
   res.send("Hello from aws");
 });

@@ -22,6 +22,7 @@ const fetchContentcontroller = async (req, res) => {
   const client = new S3Client({
     region,
     credentials: { accessKeyId, secretAccessKey },
+    endpoint: "https://s3.wasabisys.com",
   });
 
   const params = {
@@ -60,7 +61,6 @@ const fetchContentcontroller = async (req, res) => {
   };
   console.log("Sending data to client:", content);
   res.status(200).send(content);
-  // res.send(content);
 };
 
 const createFolder = async (req, res) => {
@@ -87,6 +87,7 @@ const createFolder = async (req, res) => {
     const client = new S3Client({
       region,
       credentials: { accessKeyId, secretAccessKey },
+      endpoint: "https://s3.wasabisys.com",
     });
     const folderPath = `${currentPath}${folderName}/`;
     const params = {
@@ -103,11 +104,12 @@ const createFolder = async (req, res) => {
   }
 };
 
-const uploadFiles = async (req, res) => {
+const uploadFiles = async (req, res, err) => {
   try {
     const files = req.files;
     const { accessKeyId, secretAccessKey, region, bucketName, currentPath } =
       req.body;
+
     if (!files || files.length === 0) {
       return res.status(400).send({ error: "No files uploaded" });
     }
@@ -123,6 +125,7 @@ const uploadFiles = async (req, res) => {
     const client = new S3Client({
       region,
       credentials: { accessKeyId, secretAccessKey },
+      endpoint: "https://s3.wasabisys.com",
     });
 
     const uploadResults = await Promise.all(
@@ -147,6 +150,14 @@ const uploadFiles = async (req, res) => {
     res.status(200).send(uploadResults);
   } catch (error) {
     console.error("Error uploading files:", error);
+
+    // Handle Multer-specific errors if not caught in middleware
+    if (error.code === "LIMIT_UNEXPECTED_FILE") {
+      return res
+        .status(400)
+        .send({ error: "Too many files uploaded. Maximum allowed is 10." });
+    }
+
     res.status(500).send({ error: "Failed to upload files" });
   }
 };
