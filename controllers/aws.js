@@ -115,8 +115,7 @@ const uploadFiles = async (req, res) => {
       !accessKeyId ||
       !secretAccessKey ||
       !region ||
-      !bucketName ||
-      !folderName
+      !bucketName 
     ) {
       return res.status(400).send({ error: "Invalid input" });
     }
@@ -129,7 +128,7 @@ const uploadFiles = async (req, res) => {
       files.map(async (file) => {
         const params = {
           Bucket: bucketName,
-          Key: `${currentPath}/${Date.now()}_${file.originalname}`,
+          Key: `${currentPath}${Date.now()}_${file.originalname}`,
           Body: file.buffer,
           ContentType: file.mimetype,
         };
@@ -147,6 +146,13 @@ const uploadFiles = async (req, res) => {
     res.status(200).send(uploadResults);
   } catch (error) {
     console.error("Error uploading files:", error);
+
+    if (error.code === "LIMIT_UNEXPECTED_FILE") {
+      return res
+        .status(400)
+        .send({ error: "Too many files uploaded. Maximum allowed is 10." });
+    }
+
     res.status(500).send({ error: "Failed to upload files" });
   }
 };
